@@ -1,10 +1,10 @@
 #include "Engine.h"
-
+#include <memory>
 
 Engine::Engine(std::string map_path):map(map_path){
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
-    
+
     this->is_running = 1;
     this->map_grid = map.generate_map_list(); //Reads the text file into 2D map grid array
     this->window = SDL_CreateWindow("Raycaster engine",625,675,SDL_WINDOW_FULLSCREEN);
@@ -19,17 +19,33 @@ Engine::Engine(std::string map_path):map(map_path){
     this->grid_box.w = BOX_SIZE;
     this->grid_box.h=BOX_SIZE;
     this->frame_start_time = std::chrono::steady_clock::now();
+    
+    // Initialize a player entity at the moment
+    entities.push_back(std::make_shared<player>()); 
 }
 
+void Engine::init(){
+    for (std::shared_ptr<game_object> en : entities){
+        en->init(this->renderer);
+    }
+}
 
 void Engine::HandleEvents() {
-        // Do your magic in here
     while(SDL_PollEvent(&e)){
         if (e.type == SDL_EVENT_QUIT ){
             this->is_running = 0;
+        } else {
+            this->frame_events.push_back(e); 
         }
     }
-
+    
+    for( std::shared_ptr<game_object> en : entities){
+        for(SDL_Event e : frame_events){
+            en->handle_events(e); //Broadcast all events to all entities
+        }
+    }
+    //Clear all the frame events
+    this->frame_events.clear();
 }
 
 void Engine::Draw() {
@@ -60,7 +76,11 @@ void Engine::Draw() {
         grid_box.x = OFFSET;
         grid_box.y +=(BOX_SIZE+OFFSET);
     }
-
+    
+    //Render all the entities
+    for (std::shared_ptr<game_object> en : entities ){
+        en->draw();
+    }
     SDL_RenderPresent(renderer);
 }
 

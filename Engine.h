@@ -1,4 +1,5 @@
 #include "map_loader.h"
+#include "player.h"
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
@@ -23,6 +24,8 @@ class Engine{
    
 private:
     std::vector<std::vector<int>> map_grid; 
+    std::vector<SDL_Event> frame_events;
+    std::vector<std::shared_ptr<player>> entities;
     map_loader map;
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -40,12 +43,8 @@ public:
 
     // Creates window,renderer,and read the map
     Engine(std::string map_path);
-    
+    void init();
     bool IsRunning();
     void HandleEvents();
     void Draw();
-
 };
-
-
-

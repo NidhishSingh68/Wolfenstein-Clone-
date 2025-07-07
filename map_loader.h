@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include <fstream>
@@ -10,7 +11,8 @@ private:
     unsigned int num_row;
     unsigned int num_col;
 public:
-    map_loader(std::string file_path);
+    map_loader() = default;
+    void init(std::string file_path);
     std::vector<std::vector<int>> generate_map_list();
     std::vector<int> get_map_dimensions();
 };

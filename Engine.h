@@ -1,4 +1,4 @@
-#include "map_loader.h"
+#include "map.h"
 #include "player.h"
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_rect.h>
@@ -16,17 +16,15 @@
 #define FRAME_RATE 60.f
 #define FRAME_TIME ((1/FRAME_RATE)*1000) // For ms
 
-#define BOX_SIZE 25
 #define OFFSET 1
-
 
 class Engine{
    
 private:
-    std::vector<std::vector<int>> map_grid; 
     std::vector<SDL_Event> frame_events;
     std::vector<std::shared_ptr<player>> entities;
-    map_loader map;
+    std::string map_path;
+    class map map;
     SDL_Window* window;
     SDL_Renderer* renderer;
     TTF_Font* font;
@@ -46,5 +44,6 @@ public:
     void init();
     bool IsRunning();
     void HandleEvents();
+    void update();
     void Draw();
 };

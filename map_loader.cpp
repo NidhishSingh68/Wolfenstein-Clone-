@@ -1,9 +1,9 @@
 #include "map_loader.h"
 
-map_loader::map_loader(std::string file_path){
+void map_loader::init(std::string file_path){
+
     file_handler.open(file_path.c_str());
 }
-
 std::vector<std::vector<int>> map_loader::generate_map_list(){
     std::istringstream row;
     std::vector<int> row_int;
